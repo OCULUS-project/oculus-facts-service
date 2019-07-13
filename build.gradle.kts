@@ -36,6 +36,10 @@ dependencies {
     // test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.projectreactor:reactor-test")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.5.0")
+    testImplementation("io.mockk:mockk:1.9.3")
+
+
 }
 
 tasks.withType<KotlinCompile> {
@@ -43,4 +47,8 @@ tasks.withType<KotlinCompile> {
         freeCompilerArgs = listOf("-Xjsr305=strict")
         jvmTarget = "1.8"
     }
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
 }
