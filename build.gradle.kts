@@ -13,15 +13,19 @@ java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
     mavenCentral()
+    maven(url = "https://jitpack.io")
 }
 
 val swaggerVersion = "2.9.2"
 
 dependencies {
+    // oculus
+    implementation("com.github.OCULUS-project:oculus-spring-boot-starter:0.1.3")
+
     // spring
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
     implementation("org.springframework.boot:spring-boot-starter-hateoas")
-    implementation("org.springframework.boot:spring-boot-starter-web")
+//    implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 

@@ -1,7 +1,7 @@
 package pl.poznan.put.oculus.oculusfactsservice.rest.response
 
 import io.swagger.annotations.ApiModel
-import pl.poznan.put.oculus.oculusfactsservice.exception.ErrorMessage
+import pl.poznan.put.oculus.boot.exception.ErrorMessage
 
 @ApiModel
 data class AttributesErrors (

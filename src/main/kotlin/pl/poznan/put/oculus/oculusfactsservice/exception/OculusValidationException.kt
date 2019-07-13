@@ -1,5 +1,6 @@
 package pl.poznan.put.oculus.oculusfactsservice.exception
 
+import pl.poznan.put.oculus.boot.exception.OculusException
 import pl.poznan.put.oculus.oculusfactsservice.model.Attribute
 import pl.poznan.put.oculus.oculusfactsservice.model.AttributeType
 
