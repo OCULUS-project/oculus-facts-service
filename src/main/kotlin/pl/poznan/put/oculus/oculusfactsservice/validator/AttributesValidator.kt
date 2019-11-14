@@ -3,10 +3,10 @@ package pl.poznan.put.oculus.oculusfactsservice.validator
 import pl.poznan.put.oculus.boot.exception.ErrorMessage
 import pl.poznan.put.oculus.oculusfactsservice.exception.NoSuchAttributeException
 import pl.poznan.put.oculus.oculusfactsservice.exception.OculusValidationException
-import pl.poznan.put.oculus.oculusfactsservice.model.Attribute
+import pl.poznan.put.oculus.oculusfactsservice.model.AttributeTemplate
 
 class AttributesValidator (
-        private val templates: List<Attribute>
+        private val templates: List<AttributeTemplate>
 ) {
     fun validate(attributes: Map<String, String>) = attributes
             .map { it.toPair() }
@@ -23,7 +23,7 @@ class AttributesValidator (
         return validate(name, value, template)
     }
 
-    private fun validate(name: String, value: String, template: Attribute): List<ErrorMessage> {
+    private fun validate(name: String, value: String, template: AttributeTemplate): List<ErrorMessage> {
         return AttributeValidator(name, value, template).validate()
     }
 

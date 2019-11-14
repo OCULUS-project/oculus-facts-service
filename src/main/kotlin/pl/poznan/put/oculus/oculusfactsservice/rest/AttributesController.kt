@@ -23,10 +23,12 @@ class AttributesController (
             .ok(
                 AttributesErrors(
                         service.validateAttributes(attributes.attributes)
-                                .map { AttributeErrors(
-                                        AttributeMessage( it.first.first, it.first.second),
+                                .map {
+                                    AttributeErrors(
+                                        AttributeMessage(it.first.first, it.first.second),
                                         it.second
-                                ) }
+                                    )
+                                }
                 )
             )
 

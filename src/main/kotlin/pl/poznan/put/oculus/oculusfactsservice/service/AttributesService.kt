@@ -12,7 +12,6 @@ class AttributesService (
 ) {
     fun validateAttributes(attributes: Map<String, String>): List<Pair<Pair<String, String>, List<ErrorMessage>>> {
         val templates = allAttributes()
-        logger.debug("COOL")
         return AttributesValidator(templates).validate(attributes)
     }
 
