@@ -15,7 +15,7 @@ class AttributesService (
 
     // TODO: @Cached
     fun allAttributes(): List<AttributeTemplate> = repository.findAll()
-            .also { logger.info("fetching all attributes") }
+            .also { logger.info("fetching all attributes, found ${it.size}") }
 
     companion object {
         private val logger = LoggerFactory.getLogger(AttributesService::class.java)

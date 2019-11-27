@@ -27,10 +27,9 @@ data class AttributesErrorsResponse (
 ) : RepresentationModel<AttributesErrorsResponse>() {
     init {
         add(linkTo(AttributesController::class.java).slash("validate").withSelfRel())
-        add(linkTo(methodOn(AttributesController::class.java).getAllTemplates()).withRel(IanaLinkRelations.COLLECTION))
+        add(linkTo(methodOn(AttributesController::class.java).getAllTemplates()).withRel(IanaLinkRelations.DESCRIBED_BY))
     }
 }
-
 
 @ApiModel
 data class AttributesTemplatesResponse (

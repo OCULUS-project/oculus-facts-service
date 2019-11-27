@@ -27,16 +27,21 @@ class AttributesController (
 
     @PostMapping("validate")
     @ApiOperation(value = "Validate given attributes")
-    @ApiResponses(value = [ApiResponse(code = 200, message = "validation done")])
+    @ApiResponses(value = [
+        ApiResponse(code = 200, message = "validation done"),
+        ApiResponse(code = 422, message = "validation error")
+    ])
     fun validateAttributes(
             @RequestBody @ApiParam(value = "attributes to validate", required = true) attributes: AttributesRequest
-    ) = ResponseEntity
-            .ok(
-                AttributesErrorsResponse(
-                        service.validateAttributes(attributes.attributes)
-                                .map { AttributeErrorsResponse(AttributeResponse(it.first.first, it.first.second), it.second) }
-                )
-            )
+    ): ResponseEntity<AttributesErrorsResponse> {
+        val errors = service.validateAttributes(attributes.attributes)
+        val invalid = errors.any { it.second.isNotEmpty() }
+        val response = AttributesErrorsResponse(
+                errors.map { AttributeErrorsResponse(AttributeResponse(it.first.first, it.first.second), it.second) }
+        )
+        return if (invalid) ResponseEntity.unprocessableEntity().body(response)
+        else ResponseEntity.ok(response)
+    }
 
     @GetMapping("templates")
     @ApiOperation(value = "Get list of all templates")
