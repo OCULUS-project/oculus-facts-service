@@ -8,14 +8,14 @@ import pl.poznan.put.oculus.oculusfactsservice.exception.OculusValidationExcepti
 import pl.poznan.put.oculus.oculusfactsservice.exception.PatternNotMatchedException
 import pl.poznan.put.oculus.oculusfactsservice.exception.ValueNotAllowedException
 import pl.poznan.put.oculus.oculusfactsservice.exception.ValueOutsideAllowedRangeException
-import pl.poznan.put.oculus.oculusfactsservice.model.Attribute
 import pl.poznan.put.oculus.oculusfactsservice.model.AttributeRange
+import pl.poznan.put.oculus.oculusfactsservice.model.AttributeTemplate
 import pl.poznan.put.oculus.oculusfactsservice.model.AttributeType
 
 internal class AttributeValidator (
         private val name: String,
         private val value: String,
-        private val template: Attribute
+        private val template: AttributeTemplate
 ) {
     fun validate(): List<ErrorMessage> {
         val errors = mutableListOf<ErrorMessage>()

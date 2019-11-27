@@ -4,8 +4,8 @@ import io.swagger.annotations.ApiModel
 import org.springframework.data.mongodb.core.mapping.Document
 
 @Document
-@ApiModel(description = "an entity that can be converted into fact")
-data class Attribute (
+@ApiModel(description = "an entity that describes attribute")
+data class AttributeTemplate (
         val name: String,
         val unit: AttributeUnit,
         val type: AttributeType,
@@ -14,7 +14,7 @@ data class Attribute (
         val range: AttributeRange = AttributeRange("0", "0")
 ) {
     companion object {
-        fun empty() = Attribute("", AttributeUnit.NONE, AttributeType.STRING)
+        fun empty() = AttributeTemplate("", AttributeUnit.NONE, AttributeType.STRING)
     }
 }
 

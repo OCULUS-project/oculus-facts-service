@@ -5,9 +5,9 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
-import pl.poznan.put.oculus.oculusfactsservice.exception.ErrorMessage
-import pl.poznan.put.oculus.oculusfactsservice.model.Attribute
+import pl.poznan.put.oculus.boot.exception.ErrorMessage
 import pl.poznan.put.oculus.oculusfactsservice.model.AttributeRange
+import pl.poznan.put.oculus.oculusfactsservice.model.AttributeTemplate
 import pl.poznan.put.oculus.oculusfactsservice.model.AttributeType
 import pl.poznan.put.oculus.oculusfactsservice.model.AttributeUnit
 
@@ -22,7 +22,7 @@ class AttributeValidatorTest {
         // given
         val name = ""
         val value = "value"
-        val template = Attribute.empty()
+        val template = AttributeTemplate.empty()
         val validator = AttributeValidator(name, value, template)
 
         // when
@@ -37,7 +37,7 @@ class AttributeValidatorTest {
     fun `should return error when given empty value`() {
         // given
         val value = ""
-        val template = Attribute.empty()
+        val template = AttributeTemplate.empty()
         val validator = AttributeValidator(NAME, value, template)
 
         // when
@@ -53,7 +53,7 @@ class AttributeValidatorTest {
     @ValueSource(strings = ["1", "123", "-1", "-123"])
     fun `should validate INT type` (value: String) {
         // given
-        val template = Attribute(NAME, AttributeUnit.UNIT, AttributeType.INT)
+        val template = AttributeTemplate(NAME, AttributeUnit.UNIT, AttributeType.INT)
         val validator = AttributeValidator(NAME, value, template)
 
         // when
@@ -68,7 +68,7 @@ class AttributeValidatorTest {
     @ValueSource(strings = ["1.0", "1.1", "123.123", "-1.1", "-123.123", "abc", "ABC", "abc def"])
     fun `should validate invalid INT type` (value: String) {
         // given
-        val template = Attribute(NAME, AttributeUnit.UNIT, AttributeType.INT)
+        val template = AttributeTemplate(NAME, AttributeUnit.UNIT, AttributeType.INT)
         val validator = AttributeValidator(NAME, value, template)
 
         // when
@@ -84,7 +84,7 @@ class AttributeValidatorTest {
     @ValueSource(strings = ["1", "123"])
     fun `should validate UINT type` (value: String) {
         // given
-        val template = Attribute(NAME, AttributeUnit.UNIT, AttributeType.UINT)
+        val template = AttributeTemplate(NAME, AttributeUnit.UNIT, AttributeType.UINT)
         val validator = AttributeValidator(NAME, value, template)
 
         // when
@@ -99,7 +99,7 @@ class AttributeValidatorTest {
     @ValueSource(strings = ["-1", "-123", "1.0", "1.1", "123.123", "-1.1", "-123.123", "abc", "ABC", "abc def"])
     fun `should validate invalid UINT type` (value: String) {
         // given
-        val template = Attribute(NAME, AttributeUnit.UNIT, AttributeType.UINT)
+        val template = AttributeTemplate(NAME, AttributeUnit.UNIT, AttributeType.UINT)
         val validator = AttributeValidator(NAME, value, template)
 
         // when
@@ -115,7 +115,7 @@ class AttributeValidatorTest {
     @ValueSource(strings = ["1.0", "1.1", "123.123", "-1.1", "-123.123"])
     fun `should validate FLOAT type` (value: String) {
         // given
-        val template = Attribute(NAME, AttributeUnit.UNIT, AttributeType.FLOAT)
+        val template = AttributeTemplate(NAME, AttributeUnit.UNIT, AttributeType.FLOAT)
         val validator = AttributeValidator(NAME, value, template)
 
         // when
@@ -130,7 +130,7 @@ class AttributeValidatorTest {
     @ValueSource(strings = ["abc", "ABC", "abc def"])
     fun `should validate invalid FLOAT type` (value: String) {
         // given
-val template = Attribute(NAME, AttributeUnit.UNIT, AttributeType.FLOAT)
+val template = AttributeTemplate(NAME, AttributeUnit.UNIT, AttributeType.FLOAT)
         val validator = AttributeValidator(NAME, value, template)
 
         // when
@@ -146,7 +146,7 @@ val template = Attribute(NAME, AttributeUnit.UNIT, AttributeType.FLOAT)
     @ValueSource(strings = ["1.0", "1.1", "123.123"])
     fun `should validate UFLOAT type` (value: String) {
         // given
-        val template = Attribute(NAME, AttributeUnit.UNIT, AttributeType.UFLOAT)
+        val template = AttributeTemplate(NAME, AttributeUnit.UNIT, AttributeType.UFLOAT)
         val validator = AttributeValidator(NAME, value, template)
 
         // when
@@ -161,7 +161,7 @@ val template = Attribute(NAME, AttributeUnit.UNIT, AttributeType.FLOAT)
     @ValueSource(strings = ["-1.1", "-123.123", "abc", "ABC", "abc def"])
     fun `should validate invalid UFLOAT type` (value: String) {
         // given
-        val template = Attribute(NAME, AttributeUnit.UNIT, AttributeType.UFLOAT)
+        val template = AttributeTemplate(NAME, AttributeUnit.UNIT, AttributeType.UFLOAT)
         val validator = AttributeValidator(NAME, value, template)
 
         // when
@@ -177,7 +177,7 @@ val template = Attribute(NAME, AttributeUnit.UNIT, AttributeType.FLOAT)
     @ValueSource(strings = ["1", "123", "-1", "-123", "1.0", "1.1", "123.123", "-1.1", "-123.123", "abc", "ABC", "abc def"])
     fun `should validate STRING type` (value: String) {
         // given
-        val template = Attribute(NAME, AttributeUnit.UNIT, AttributeType.STRING)
+        val template = AttributeTemplate(NAME, AttributeUnit.UNIT, AttributeType.STRING)
         val validator = AttributeValidator(NAME, value, template)
 
         // when
@@ -192,7 +192,7 @@ val template = Attribute(NAME, AttributeUnit.UNIT, AttributeType.FLOAT)
     @ValueSource(strings = [""])
     fun `should validate invalid STRING type` (value: String) {
         // given
-        val template = Attribute(NAME, AttributeUnit.UNIT, AttributeType.STRING)
+        val template = AttributeTemplate(NAME, AttributeUnit.UNIT, AttributeType.STRING)
         val validator = AttributeValidator(NAME, value, template)
 
         // when
@@ -207,7 +207,7 @@ val template = Attribute(NAME, AttributeUnit.UNIT, AttributeType.FLOAT)
     fun `should validate allowed values`() {
         // given
         val value = "value"
-        val template = Attribute(NAME, AttributeUnit.NONE, AttributeType.STRING, values = listOf("value"))
+        val template = AttributeTemplate(NAME, AttributeUnit.NONE, AttributeType.STRING, values = listOf("value"))
         val validator = AttributeValidator(NAME, value, template)
 
         // when
@@ -221,7 +221,7 @@ val template = Attribute(NAME, AttributeUnit.UNIT, AttributeType.FLOAT)
     fun `should validate invalid allowed values`() {
         // given
         val value = "value1"
-        val template = Attribute(NAME, AttributeUnit.NONE, AttributeType.STRING, values = listOf("value"))
+        val template = AttributeTemplate(NAME, AttributeUnit.NONE, AttributeType.STRING, values = listOf("value"))
         val validator = AttributeValidator(NAME, value, template)
 
         // when
@@ -236,7 +236,7 @@ val template = Attribute(NAME, AttributeUnit.UNIT, AttributeType.FLOAT)
     fun `should validate regex`() {
         // given
         val value = "AB"
-        val template = Attribute(NAME, AttributeUnit.NONE, AttributeType.STRING, regex = "[A-Z][A-Z]")
+        val template = AttributeTemplate(NAME, AttributeUnit.NONE, AttributeType.STRING, regex = "[A-Z][A-Z]")
         val validator = AttributeValidator(NAME, value, template)
 
         // when
@@ -250,7 +250,7 @@ val template = Attribute(NAME, AttributeUnit.UNIT, AttributeType.FLOAT)
     fun `should validate invalid regex`() {
         // given
         val value = "ab"
-        val template = Attribute(NAME, AttributeUnit.NONE, AttributeType.STRING, regex = "[A-Z][A-Z]")
+        val template = AttributeTemplate(NAME, AttributeUnit.NONE, AttributeType.STRING, regex = "[A-Z][A-Z]")
         val validator = AttributeValidator(NAME, value, template)
 
         // when
@@ -265,7 +265,7 @@ val template = Attribute(NAME, AttributeUnit.UNIT, AttributeType.FLOAT)
     fun `should validate range`() {
         // given
         val value = "0.5"
-        val template = Attribute(NAME, AttributeUnit.NONE, AttributeType.FLOAT, range = AttributeRange("0", "1"))
+        val template = AttributeTemplate(NAME, AttributeUnit.NONE, AttributeType.FLOAT, range = AttributeRange("0", "1"))
         val validator = AttributeValidator(NAME, value, template)
 
         // when
@@ -279,7 +279,7 @@ val template = Attribute(NAME, AttributeUnit.UNIT, AttributeType.FLOAT)
     fun `should validate invalid range`() {
         // given
         val value = "1.5"
-        val template = Attribute(NAME, AttributeUnit.NONE, AttributeType.FLOAT, range = AttributeRange("0", "1"))
+        val template = AttributeTemplate(NAME, AttributeUnit.NONE, AttributeType.FLOAT, range = AttributeRange("0", "1"))
         val validator = AttributeValidator(NAME, value, template)
 
         // when
@@ -291,7 +291,7 @@ val template = Attribute(NAME, AttributeUnit.UNIT, AttributeType.FLOAT)
     }
 
     private fun assertErrorMessage(
-            name: String, value: String, template: Attribute, expectedError: String, message: ErrorMessage
+            name: String, value: String, template: AttributeTemplate, expectedError: String, message: ErrorMessage
     ) {
         assertEquals(expectedError, message.error)
         assertEquals(name, message.details["name"])

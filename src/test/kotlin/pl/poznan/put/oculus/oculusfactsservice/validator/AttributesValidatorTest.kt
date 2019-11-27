@@ -4,19 +4,19 @@ import io.mockk.every
 import io.mockk.mockkConstructor
 import io.mockk.verify
 import org.junit.jupiter.api.Test
-import pl.poznan.put.oculus.oculusfactsservice.model.Attribute
 import pl.poznan.put.oculus.oculusfactsservice.model.AttributeRange
+import pl.poznan.put.oculus.oculusfactsservice.model.AttributeTemplate
 import pl.poznan.put.oculus.oculusfactsservice.model.AttributeType
 import pl.poznan.put.oculus.oculusfactsservice.model.AttributeUnit
 
 class AttributesValidatorTest {
 
     private val templates = listOf(
-            Attribute("weight", AttributeUnit.KILOGRAM, AttributeType.UFLOAT),
-            Attribute("height", AttributeUnit.KILOGRAM, AttributeType.UINT),
-            Attribute("initials", AttributeUnit.NONE, AttributeType.STRING, regex = "[A-Z][A-Z]"),
-            Attribute("sex", AttributeUnit.NONE, AttributeType.STRING, values = listOf("MAN", "WOMAN")),
-            Attribute("score", AttributeUnit.NONE, AttributeType.FLOAT, range = AttributeRange("-1", "1"))
+            AttributeTemplate("weight", AttributeUnit.KILOGRAM, AttributeType.UFLOAT),
+            AttributeTemplate("height", AttributeUnit.KILOGRAM, AttributeType.UINT),
+            AttributeTemplate("initials", AttributeUnit.NONE, AttributeType.STRING, regex = "[A-Z][A-Z]"),
+            AttributeTemplate("sex", AttributeUnit.NONE, AttributeType.STRING, values = listOf("MAN", "WOMAN")),
+            AttributeTemplate("score", AttributeUnit.NONE, AttributeType.FLOAT, range = AttributeRange("-1", "1"))
     )
 
     private val validator = AttributesValidator(templates)

@@ -2,7 +2,7 @@ package pl.poznan.put.oculus.oculusfactsservice.service
 
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
-import pl.poznan.put.oculus.boot.exception.ErrorMessage
+import pl.poznan.put.oculus.oculusfactsservice.model.AttributeTemplate
 import pl.poznan.put.oculus.oculusfactsservice.repository.AttributesRepository
 import pl.poznan.put.oculus.oculusfactsservice.validator.AttributesValidator
 
@@ -10,14 +10,12 @@ import pl.poznan.put.oculus.oculusfactsservice.validator.AttributesValidator
 class AttributesService (
         val repository: AttributesRepository
 ) {
-    fun validateAttributes(attributes: Map<String, String>): List<Pair<Pair<String, String>, List<ErrorMessage>>> {
-        val templates = allAttributes()
-        logger.debug("COOL")
-        return AttributesValidator(templates).validate(attributes)
-    }
+    fun validateAttributes(attributes: Map<String, String>) =
+            AttributesValidator(allAttributes()).validate(attributes)
 
     // TODO: @Cached
-    private fun allAttributes() = repository.findAll()
+    fun allAttributes(): List<AttributeTemplate> = repository.findAll()
+            .also { logger.info("fetching all attributes, found ${it.size}") }
 
     companion object {
         private val logger = LoggerFactory.getLogger(AttributesService::class.java)
