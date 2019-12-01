@@ -1,6 +1,5 @@
 package pl.poznan.put.oculus.oculusfactsservice.validator
 
-import pl.poznan.put.oculus.boot.exception.ErrorMessage
 import pl.poznan.put.oculus.oculusfactsservice.exception.NoSuchAttributeException
 import pl.poznan.put.oculus.oculusfactsservice.exception.OculusValidationException
 import pl.poznan.put.oculus.oculusfactsservice.model.AttributeTemplate
@@ -14,16 +13,16 @@ class AttributesValidator (
 
     fun validate(attribute: Pair<String, String>) = validate(attribute.first, attribute.second)
 
-    private fun validate(name: String, value: String): List<ErrorMessage> {
+    private fun validate(name: String, value: String): List<OculusValidationException> {
         val template = try {
             getTemplate(name)
         } catch (e: OculusValidationException) {
-            return listOf(e.errorMessage())
+            return listOf(e)
         }
         return validate(name, value, template)
     }
 
-    private fun validate(name: String, value: String, template: AttributeTemplate): List<ErrorMessage> {
+    private fun validate(name: String, value: String, template: AttributeTemplate): List<OculusValidationException> {
         return AttributeValidator(name, value, template).validate()
     }
 

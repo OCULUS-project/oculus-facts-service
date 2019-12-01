@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import pl.poznan.put.oculus.boot.config.PublicAPI
+import pl.poznan.put.oculus.boot.exception.OculusException
 import pl.poznan.put.oculus.oculusfactsservice.rest.model.AttributeErrorsResponse
 import pl.poznan.put.oculus.oculusfactsservice.rest.model.AttributeResponse
 import pl.poznan.put.oculus.oculusfactsservice.rest.model.AttributesErrorsResponse
@@ -36,9 +37,13 @@ class AttributesController (
     ): ResponseEntity<AttributesErrorsResponse> {
         val errors = service.validateAttributes(attributes.attributes)
         val invalid = errors.any { it.second.isNotEmpty() }
-        val response = AttributesErrorsResponse(
-                errors.map { AttributeErrorsResponse(AttributeResponse(it.first.first, it.first.second), it.second) }
-        )
+        val attributesResponses = errors.map {
+            AttributeErrorsResponse(
+                    AttributeResponse(it.first.first, it.first.second),
+                    it.second.map(OculusException::errorMessage)
+            )
+        }
+        val response = AttributesErrorsResponse(attributesResponses)
         return if (invalid) ResponseEntity.unprocessableEntity().body(response)
         else ResponseEntity.ok(response)
     }

@@ -1,6 +1,5 @@
 package pl.poznan.put.oculus.oculusfactsservice.validator
 
-import pl.poznan.put.oculus.boot.exception.ErrorMessage
 import pl.poznan.put.oculus.oculusfactsservice.exception.EmptyNameException
 import pl.poznan.put.oculus.oculusfactsservice.exception.EmptyValueException
 import pl.poznan.put.oculus.oculusfactsservice.exception.InvalidTypeException
@@ -17,14 +16,13 @@ internal class AttributeValidator (
         private val value: String,
         private val template: AttributeTemplate
 ) {
-    fun validate(): List<ErrorMessage> {
-        val errors = mutableListOf<ErrorMessage>()
+    fun validate(): List<OculusValidationException> {
         try {
             validateConstraints()
         } catch (e: OculusValidationException) {
-            errors.add(e.errorMessage())
+            return listOf(e)
         }
-        return errors
+        return emptyList()
     }
 
     private fun validateConstraints() {

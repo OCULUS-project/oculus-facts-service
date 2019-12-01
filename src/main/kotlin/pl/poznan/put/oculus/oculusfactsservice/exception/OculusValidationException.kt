@@ -4,7 +4,7 @@ import pl.poznan.put.oculus.boot.exception.OculusException
 import pl.poznan.put.oculus.oculusfactsservice.model.AttributeTemplate
 import pl.poznan.put.oculus.oculusfactsservice.model.AttributeType
 
-open class OculusValidationException (
+abstract class OculusValidationException (
         msg: String,
         val attributeName: String,
         val attributeValue: String,
