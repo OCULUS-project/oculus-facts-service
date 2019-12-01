@@ -6,7 +6,7 @@ import org.springframework.data.annotation.Id
 @ApiModel(description = "premise for a rule")
 open class Premise(
         @Id
-        val id: String?,
+        var id: String?,
         val head: String,
         val set: List<String>,
         val conjunction: Boolean

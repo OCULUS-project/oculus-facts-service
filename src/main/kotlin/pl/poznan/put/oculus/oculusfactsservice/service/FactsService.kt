@@ -26,13 +26,12 @@ class FactsService (
     }
 
     private fun getAttributesFromMetrics(patientMetricsId: String) = restTemplate.getForEntity(
-            "$patientsServiceHost/patients/metrics",
-            PatientsMetricsResponse::class.java,
-            mapOf("id" to patientMetricsId)
+            "http://$patientsServiceHost/patients/metrics?id=$patientMetricsId",
+            PatientsMetricsResponse::class.java
     ).let {
         when(it.statusCode) {
             HttpStatus.OK -> it.body!!.attributes
-            else -> throw object : OculusException("Error fetching metrics $patientMetricsId") {}
+            else -> throw MetricsFetchingException(patientMetricsId)
         }
     }
 
@@ -58,6 +57,8 @@ class FactsService (
         private data class PatientsMetricsResponse (
                 val attributes: Map<String, String>
         )
+
+        private class MetricsFetchingException(id: String) : OculusException("Error fetching metrics $id")
     }
 
 }
