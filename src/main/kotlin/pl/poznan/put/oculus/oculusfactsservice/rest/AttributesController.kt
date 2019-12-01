@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import pl.poznan.put.oculus.boot.config.PublicAPI
-import pl.poznan.put.oculus.boot.exception.OculusException
 import pl.poznan.put.oculus.oculusfactsservice.rest.model.AttributeErrorsResponse
 import pl.poznan.put.oculus.oculusfactsservice.rest.model.AttributeResponse
 import pl.poznan.put.oculus.oculusfactsservice.rest.model.AttributesErrorsResponse
@@ -40,7 +39,7 @@ class AttributesController (
         val attributesResponses = errors.map {
             AttributeErrorsResponse(
                     AttributeResponse(it.first.first, it.first.second),
-                    it.second.map(OculusException::errorMessage)
+                    it.second.map { e -> e.errorMessage() }
             )
         }
         val response = AttributesErrorsResponse(attributesResponses)

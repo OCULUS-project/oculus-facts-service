@@ -4,10 +4,10 @@ import io.swagger.annotations.ApiModel
 import org.springframework.data.annotation.Id
 
 @ApiModel(description = "premise for a rule")
-open class Premise (
+open class Premise(
         @Id
         val id: String?,
         val head: String,
         val set: List<String>,
-        val conjunction: String
+        val conjunction: Boolean
 )

@@ -2,6 +2,7 @@ package pl.poznan.put.oculus.oculusfactsservice.service
 
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import pl.poznan.put.oculus.oculusfactsservice.exception.OculusValidationException
 import pl.poznan.put.oculus.oculusfactsservice.model.AttributeTemplate
 import pl.poznan.put.oculus.oculusfactsservice.repository.AttributesRepository
 import pl.poznan.put.oculus.oculusfactsservice.validator.AttributesValidator
@@ -10,7 +11,7 @@ import pl.poznan.put.oculus.oculusfactsservice.validator.AttributesValidator
 class AttributesService (
         val repository: AttributesRepository
 ) {
-    fun validateAttributes(attributes: Map<String, String>) =
+    fun validateAttributes(attributes: Map<String, String>): List<Pair<Pair<String, String>, List<OculusValidationException>>> =
             AttributesValidator(allAttributes()).validate(attributes)
 
     // TODO: @Cached
