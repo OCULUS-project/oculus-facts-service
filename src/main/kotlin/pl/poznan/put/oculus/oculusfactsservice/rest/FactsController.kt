@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import pl.poznan.put.oculus.boot.config.PublicAPI
 import pl.poznan.put.oculus.oculusfactsservice.rest.model.FactsFromImagesRequest
 import pl.poznan.put.oculus.oculusfactsservice.rest.model.FactsFromMetricsRequest
 import pl.poznan.put.oculus.oculusfactsservice.rest.model.FactsFromMetricsResponse
@@ -13,6 +14,7 @@ import pl.poznan.put.oculus.oculusfactsservice.service.FactsService
 
 @RestController
 @RequestMapping("/facts")
+@PublicAPI
 class FactsController (
         private val service: FactsService
 ) {
