@@ -18,6 +18,7 @@ import org.springframework.kafka.core.ProducerFactory
 import org.springframework.kafka.support.serializer.JsonDeserializer
 import org.springframework.kafka.support.serializer.JsonSerializer
 import pl.poznan.put.oculus.oculusfactsservice.model.JobEvent
+import pl.poznan.put.oculus.oculusfactsservice.model.ResultFactEvent
 import pl.poznan.put.oculus.oculusfactsservice.model.SourceFactEvent
 
 
@@ -33,24 +34,39 @@ class KafkaTopicConfig (
     )
 
     @Bean
-    fun factsTopic(): NewTopic = NewTopic("sourceFacts", 1, 1.toShort())
+    fun sourceFactsTopic(): NewTopic = NewTopic("sourceFacts", 1, 1.toShort())
 
     @Bean
-    fun consumerFactory(): ConsumerFactory<String, String> = DefaultKafkaConsumerFactory(
-            mapOf(
-                    ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG to bootstrapAddress,
-                    ConsumerConfig.GROUP_ID_CONFIG to "1",
-                    ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG to JsonDeserializer::class.java,
-                    ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG to JsonDeserializer::class.java,
-                    JsonDeserializer.TRUSTED_PACKAGES to "*",
-                    JsonDeserializer.VALUE_DEFAULT_TYPE to SourceFactEvent::class.java
-            )
+    fun resultFactsTopic(): NewTopic = NewTopic("resultFacts", 1, 1.toShort())
+
+    private val consumerConfigs = mapOf(
+            ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG to bootstrapAddress,
+            ConsumerConfig.GROUP_ID_CONFIG to "1",
+            ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG to JsonDeserializer::class.java,
+            ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG to JsonDeserializer::class.java,
+            JsonDeserializer.TRUSTED_PACKAGES to "*"
     )
 
     @Bean
-    fun kafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, String>
-            = ConcurrentKafkaListenerContainerFactory<String, String>()
-            .apply { consumerFactory = consumerFactory() }
+    fun sourceFactConsumerFactory(): ConsumerFactory<String, SourceFactEvent> = DefaultKafkaConsumerFactory(
+            consumerConfigs.plus(JsonDeserializer.VALUE_DEFAULT_TYPE to SourceFactEvent::class.java)
+    )
+
+    @Bean
+    fun resultFactConsumerFactory(): ConsumerFactory<String, ResultFactEvent> = DefaultKafkaConsumerFactory(
+            consumerConfigs.plus(JsonDeserializer.VALUE_DEFAULT_TYPE to ResultFactEvent::class.java)
+    )
+
+    @Bean
+    fun kafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, SourceFactEvent> =
+            ConcurrentKafkaListenerContainerFactory<String, SourceFactEvent>()
+                    .apply { consumerFactory = sourceFactConsumerFactory() }
+
+    @Bean
+    fun resultFactListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, ResultFactEvent> =
+            ConcurrentKafkaListenerContainerFactory<String, ResultFactEvent>()
+                    .apply { consumerFactory = resultFactConsumerFactory() }
+
 
     private fun <A, B> producerFactory() =  DefaultKafkaProducerFactory<A, B>(
             mapOf(

@@ -13,4 +13,8 @@ class ResultFact (
         grfIrf: GrfIrf,
         @ApiModelProperty(value = "the job the fact belongs to")
         val job: String
-) : Fact(id, head, set, conjunction, grfIrf)
+) : Fact(id, head, set, conjunction, grfIrf) {
+        constructor(
+                head: String, set: List<String>, conjunction: Boolean, grfIrf: GrfIrf, job: String
+        ) : this(null, head, set, conjunction, grfIrf, job)
+}

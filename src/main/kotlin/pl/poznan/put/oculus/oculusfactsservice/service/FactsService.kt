@@ -11,16 +11,20 @@ import pl.poznan.put.oculus.boot.exception.OculusException
 import pl.poznan.put.oculus.oculusfactsservice.model.GrfIrf
 import pl.poznan.put.oculus.oculusfactsservice.model.JobEvent
 import pl.poznan.put.oculus.oculusfactsservice.model.JobEventType
+import pl.poznan.put.oculus.oculusfactsservice.model.ResultFactEvent
 import pl.poznan.put.oculus.oculusfactsservice.model.SourceFactEvent
 import pl.poznan.put.oculus.oculusfactsservice.model.fact.FactSource
 import pl.poznan.put.oculus.oculusfactsservice.model.fact.FactSourceType
+import pl.poznan.put.oculus.oculusfactsservice.model.fact.ResultFact
 import pl.poznan.put.oculus.oculusfactsservice.model.fact.SourceFact
+import pl.poznan.put.oculus.oculusfactsservice.repository.ResultFactsRepository
 import pl.poznan.put.oculus.oculusfactsservice.repository.SourceFactsRepository
 
 @Service
 class FactsService (
         private val attributesService: AttributesService,
         private val sourceFactsRepository: SourceFactsRepository,
+        private val resultFactsRepository: ResultFactsRepository,
         private val restTemplate: RestTemplate,
         private val jobsKafkaTemplate: KafkaTemplate<String, JobEvent>,
         @Value("\${oculus.patients-db-service}")
@@ -62,24 +66,35 @@ class FactsService (
         ) }
     }
 
-    private fun saveSourceFact(
-            head: String, set: List<String>, conjunction: Boolean, grfIrf: GrfIrf, job: String, source: FactSource
-    ) = sourceFactsRepository.insert(SourceFact(head, set, conjunction, grfIrf, job, source))
-
-    @KafkaListener(topics = ["sourceFacts"], groupId = "1")
-    fun receive(event: SourceFactEvent) {
-        saveSourceFact(event.head, event.set, event.conjunction, event.grfIrf, event.job, event.source)
-        if (event.last) processLastFactEvent(event.source.type, event.job)
+    @KafkaListener(topics = ["sourceFacts"], groupId = "1", containerFactory = "kafkaListenerContainerFactory")
+    fun receiveSourceFacts(event: SourceFactEvent) {
+        sourceFactsRepository.insert(SourceFact(event.head, event.set, event.conjunction, event.grfIrf, event.job, event.source))
+        if (event.last) processLastSourceFactEvent(event.source.type, event.job)
     }
 
-    private fun processLastFactEvent(sourceType: FactSourceType, jobId: String) {
+    private fun processLastSourceFactEvent(sourceType: FactSourceType, jobId: String) {
         when(sourceType) {
             FactSourceType.METRICS -> Unit // won't receive
             FactSourceType.IMAGE -> {
                 jobsKafkaTemplate.send("jobs", JobEvent(JobEventType.IMAGE_INFERENCE_ENDED, jobId))
+                logger.info("sent IMAGE_INFERENCE_ENDED event for job $jobId")
             }
         }
-        logger.info("sent last fact from $sourceType event for job $jobId")
+    }
+
+    @KafkaListener(topics = ["resultFacts"], groupId = "1", containerFactory = "resultFactListenerContainerFactory")
+    fun receiveResultFacts(event: ResultFactEvent) {
+        event.facts.asSequence()
+                .map { ResultFact(it.head, it.set, it.conjunction, it.grfIrf, event.job) }
+                .toList()
+                .let { resultFactsRepository.insert(it) }
+
+        if (event.last) processLastResultFactEvent( event.job)
+    }
+
+    private fun processLastResultFactEvent(jobId: String) {
+        jobsKafkaTemplate.send("jobs", JobEvent(JobEventType.INFERENCE_ENDED, jobId))
+        logger.info("sent INFERENCE_ENDED event for job $jobId")
     }
 
     companion object {

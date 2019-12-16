@@ -18,3 +18,16 @@ data class JobEvent (
 )
 
 enum class JobEventType { IMAGE_INFERENCE_ENDED, INFERENCE_ENDED }
+
+data class ResultFactEvent (
+        val facts: List<ResultFactDto>,
+        val job: String,
+        val last: Boolean
+)
+
+data class ResultFactDto (
+        val head: String,
+        val set: List<String>,
+        val conjunction: Boolean,
+        val grfIrf: GrfIrf
+)
