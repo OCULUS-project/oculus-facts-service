@@ -15,7 +15,11 @@ class SourceFact (
         val job: String,
         @ApiModelProperty(value = "source of the fact")
         val source: FactSource
-) : Fact(id, head, set, conjunction, grfIrf)
+) : Fact(id, head, set, conjunction, grfIrf) {
+        constructor(
+                head: String, set: List<String>, conjunction: Boolean, grfIrf: GrfIrf, job: String, source: FactSource
+        ) : this(null, head, set, conjunction, grfIrf, job, source)
+}
 
 @ApiModel(description = "explains the source from which the fact was infered or generated")
 data class FactSource (
