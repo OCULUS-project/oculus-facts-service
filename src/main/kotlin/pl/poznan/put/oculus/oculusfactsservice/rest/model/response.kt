@@ -7,6 +7,7 @@ import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn
 import pl.poznan.put.oculus.boot.exception.ErrorMessage
 import pl.poznan.put.oculus.oculusfactsservice.model.AttributeTemplate
+import pl.poznan.put.oculus.oculusfactsservice.model.fact.SourceFact
 import pl.poznan.put.oculus.oculusfactsservice.rest.AttributesController
 
 @ApiModel
@@ -40,3 +41,10 @@ data class AttributesTemplatesResponse (
         add(linkTo(AttributesController::class.java).slash("validate").withRel("validation"))
     }
 }
+
+@ApiModel
+data class FactsFromMetricsResponse (
+        val patientsMetricsId: String,
+        val jobId: String,
+        val generatedFacts: List<SourceFact>
+) : RepresentationModel<FactsFromMetricsResponse>()

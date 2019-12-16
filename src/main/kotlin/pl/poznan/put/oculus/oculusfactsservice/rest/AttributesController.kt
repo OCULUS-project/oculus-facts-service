@@ -36,9 +36,13 @@ class AttributesController (
     ): ResponseEntity<AttributesErrorsResponse> {
         val errors = service.validateAttributes(attributes.attributes)
         val invalid = errors.any { it.second.isNotEmpty() }
-        val response = AttributesErrorsResponse(
-                errors.map { AttributeErrorsResponse(AttributeResponse(it.first.first, it.first.second), it.second) }
-        )
+        val attributesResponses = errors.map {
+            AttributeErrorsResponse(
+                    AttributeResponse(it.first.first, it.first.second),
+                    it.second.map { e -> e.errorMessage() }
+            )
+        }
+        val response = AttributesErrorsResponse(attributesResponses)
         return if (invalid) ResponseEntity.unprocessableEntity().body(response)
         else ResponseEntity.ok(response)
     }

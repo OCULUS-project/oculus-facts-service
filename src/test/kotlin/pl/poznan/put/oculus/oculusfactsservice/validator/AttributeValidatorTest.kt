@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import pl.poznan.put.oculus.boot.exception.ErrorMessage
+import pl.poznan.put.oculus.oculusfactsservice.exception.OculusValidationException
 import pl.poznan.put.oculus.oculusfactsservice.model.AttributeRange
 import pl.poznan.put.oculus.oculusfactsservice.model.AttributeTemplate
 import pl.poznan.put.oculus.oculusfactsservice.model.AttributeType
@@ -289,6 +290,10 @@ val template = AttributeTemplate(NAME, AttributeUnit.UNIT, AttributeType.FLOAT)
         assertEquals(1, result.size)
         assertErrorMessage(NAME, value, template, "VALUE_OUTSIDE_ALLOWED_RANGE", result.first())
     }
+
+    private fun assertErrorMessage(
+            name: String, value: String, template: AttributeTemplate, expectedError: String, e: OculusValidationException
+    ) = assertErrorMessage(name, value, template, expectedError, e.errorMessage())
 
     private fun assertErrorMessage(
             name: String, value: String, template: AttributeTemplate, expectedError: String, message: ErrorMessage
